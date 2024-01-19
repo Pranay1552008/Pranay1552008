@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tic Tac Toe Game</title>
+
+<style>
+
+  .board {
+
+    display: grid;
+
+    grid-template: repeat(3, 100px) / repeat(3, 100px);
+
+    gap: 5px;
+
+  }
+
+  .cell {
+
+    width: 100px;
+
+    height: 100px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid #000;
+
+    font-size: 32px;
+
+    cursor: pointer;
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div id="gameBoard" class="board"></div>
+
+
+
+<script>
+
+  const board = document.getElementById('gameBoard');
+
+
+
+  // Variables to keep track of game state
+
+  let currentPlayer = 'X';
+
+  let gameActive = true;
+
+  let gameState = ["", "", "", "", "", "", "", "", ""];
+
+
+
+  // Function to handle cell click
+
+  function handleCellClick(clickedCellEvent) {
+
+    const clickedCell = clickedCellEvent.target;
+
+    const clickedCellIndex = parseInt(clickedCell.getAttribute('data-cell-index'));
+
+
+
+    // Check if cell has been already clicked or the game is paused
+
+    if (gameState[clickedCellIndex] !== "" || !gameActive) {
+
+      return;
+
+    }
+
+
+
+    // Proceed with game flow
+
+    gameState[clickedCellIndex] = currentPlayer;
+
+    clickedCell.textContent = currentPlayer;
+
+
+
+    checkWinner();
+
+  }
+
+
+
+  // Function to check game winner
+
+  function checkWinner() {
+
+    const winConditions = [
+
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+
+      [0, 4, 8], [2, 4, 6] // Diagonals
+
+    ];
+
+
+
+    let roundWon = false;
+
+    for (let i = 0; i <= 7; i++) {
+
+        const winCondition = winConditions[i];
+
+        let a = gameState[winCondition[0]];
+
+        let b = gameState[winCondition[1]];
+
+        let c = gameState[winCondition[2]];
+
+        if (a === '' || b === '' || c === '') {
+
+            continue;
+
+        }
+
+        if (a === b && b === c) {
+
+            roundWon = true;
+
+            break;
+
+        }
+
+    }
+
+
+
+    if (roundWon) {
+
+      alert(`Player ${currentPlayer} wins!`);
+
+      gameActive = false;
+
+      return;
+
+    }
+
+
+
+    // Check for a draw
+
+    let roundDraw = !gameState.includes("");
+
+    if (roundDraw) {
+
+      alert("Game is a draw!");
+
+      gameActive = false;
+
+      return;
+
+    }
+
+
+
+    // Switch player
+
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+
+  }
+
+
+
+  // Generate game board
+
+  function createBoard() {
+
+    for (let i = 0; i < 9; i++) {
+
+      const cell = document.createElement('div');
+
+      cell.classList.add('cell');
+
+      cell.dataset.cellIndex = i;
+
+      cell.addEventListener('click', handleCellClick);
+
+      board.appendChild(cell);
+
+    }
+
+  }
+
+
+
+  // Initialize game
+
+  createBoard();
+
+</script>
+
+
+
+</body>
+
+</html>
+
